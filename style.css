@@ -1,0 +1,482 @@
+:root {
+  font-size: 16px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 600;
+
+  /* gaps */
+  --standard-gap: 1rem;
+  --small-gap: calc(var(--standard-gap) / 2);
+
+  /* colors */
+  --main-color: white;
+  --secondary-color: black;
+
+  /* paddings */
+  --standard-padding: 1ch;
+  --small-padding: calc(var(--small-padding) / 2);
+
+  /* border-radius */
+  --standard-border-radius: 1vmax;
+
+  --small-border-radius: calc(var(--standard-border-radius) / 4);
+}
+
+#start-game {
+  font-size: inherit;
+  font-weight: inherit;
+  width: min(20ch, 200px);
+}
+
+ul {
+  list-style: none;
+  list-style-position: inside;
+}
+
+a {
+  cursor: pointer;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--secondary-color);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  color: var(--main-color);
+}
+
+.content > * {
+  padding: var(--standard-padding);
+}
+
+:where(#game-settings, #start-game):not(.visible) {
+  display: none;
+}
+
+#game-settings-link:not(.visible) {
+  display: none;
+}
+
+#game-settings:not(:target) {
+  display: none;
+}
+
+#game-settings {
+  --row-gap: 2rem;
+  grid-template-columns: repeat(5, 1fr);
+  justify-items: center;
+  column-gap: 0;
+  row-gap: var(--row-gap);
+  width: fit-content;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  padding: calc(var(--standard-padding) * 2);
+  outline: 1px solid var(--main-color);
+  outline-offset: 0;
+  border-radius: var(--small-border-radius);
+  z-index: 0;
+}
+
+#game-settings:target ~ #game {
+  display: none;
+}
+
+#game-settings::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  scale: 100;
+  opacity: 0.9;
+  z-index: -1;
+  background-color: var(--secondary-color);
+}
+
+#game-settings .optionals {
+  grid-column: 1 / -1;
+  justify-self: start;
+  width: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: calc(var(--row-gap) * 2);
+  grid-auto-columns: 1fr;
+  align-items: baseline;
+}
+
+#game-settings label {
+  width: 100%;
+}
+
+#game-settings .close {
+  position: absolute;
+  top: 0;
+  right: 0.5ch;
+  font-size: 2.5ch;
+}
+
+:is(input[type="number"], button) {
+  padding: var(--standard-padding);
+  width: 6rem;
+  appearance: textfield;
+  -moz-appearance: textfield;
+  -webkit-appearance: textfield;
+  border: none;
+  outline: 1px solid var(--main-color);
+  color: var(--main-color);
+  background-color: var(--secondary-color);
+  text-align: center;
+}
+
+#game-settings :is(input, button) {
+  justify-self: center;
+}
+
+#game-settings button {
+  grid-column: 1 / -1;
+}
+
+header,
+form,
+#card-creation,
+#game {
+  display: grid;
+}
+
+form {
+  gap: var(--standard-gap);
+  text-transform: uppercase;
+}
+
+form .description {
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
+}
+
+form :is(button, label) {
+  width: min(100%, 20ch);
+  text-align: center;
+}
+
+form label,
+button,
+input {
+  padding: var(--standard-padding);
+  border-radius: var(--small-border-radius);
+}
+
+form label {
+  position: relative;
+  display: inherit;
+  gap: var(--small-gap);
+}
+
+form input {
+  appearance: none;
+  width: 100%;
+  display: block;
+}
+
+input[type="checkbox"],
+button {
+  cursor: pointer;
+}
+
+input:not([type="number"], [type="text"]),
+input::after {
+  position: absolute;
+  inset: 0;
+}
+
+input::after {
+  content: "";
+}
+
+input:checked::after {
+  border-bottom: 1px solid var(--main-color);
+}
+
+header {
+  font-size: 1.5rem;
+}
+
+header nav {
+  order: -1;
+}
+
+header nav ul {
+  display: flex;
+  gap: 2rem;
+}
+
+.players-table {
+  width: fit-content;
+}
+
+.players-table,
+.players-table :is(thead, tbody, tr) {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.players-table :is(thead, tbody, tr) {
+  grid-column: 1 / -1;
+}
+
+.players-table :is(th, tr) {
+  text-align: start;
+}
+
+.players-table :is(th:last-of-type, .score) {
+  text-align: end;
+}
+
+.players-table td {
+  width: 100%;
+}
+
+#players li {
+  display: flex;
+  gap: var(--standard-gap);
+}
+
+#players .score {
+  margin-inline-start: auto;
+}
+
+.host {
+  display: inline-block;
+}
+
+.host > td:first-of-type::before {
+  content: "(host) ";
+}
+
+.card {
+  animation: appear 1s linear forwards;
+  overflow: hidden;
+}
+
+.card figcaption {
+  padding-block-end: 2ch;
+}
+
+.card :where(.pick, .reveal) {
+  cursor: pointer;
+}
+
+.card.selected {
+  border: 1px solid red;
+}
+
+.card:not(.hidden) .reveal {
+  display: none;
+}
+
+.card.hidden :not(.reveal) {
+  display: none;
+}
+
+#cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--standard-gap);
+}
+
+.card {
+  --card-padding: calc(var(--standard-padding) * 2);
+  display: grid;
+  position: relative;
+  width: min(30ch, 300px);
+  aspect-ratio: 1;
+  grid-template-columns: 1fr 1rem;
+  padding: var(--card-padding);
+
+  border: 1px solid;
+  border-radius: 0.5vmax;
+
+  transition: scale 0.5s;
+}
+
+.card:not(:hover, :focus-within) {
+  scale: 0.95;
+}
+
+.card > * {
+  padding: inherit;
+  position: absolute;
+  inset: 0;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card img:not([src]),
+img[src=""] {
+  display: none;
+}
+
+.card :where(.pick, .reveal) {
+  position: relative;
+  margin-block-start: auto;
+  display: block;
+  grid-column: 1 / -1;
+  margin-inline: auto;
+}
+
+.card .pick {
+  background-color: black;
+  padding: calc(var(--standard-padding) / 4);
+}
+
+.card .dump {
+  grid-column: 2;
+  padding-inline: 0;
+  translate: calc(var(--card-padding) - 1ch)
+    calc(var(--card-padding) * -1 + 1ch);
+}
+
+#game:is(.voting, .hidden-cards) .configurables {
+  display: none;
+}
+
+.card.marked {
+  box-shadow: 1px 1px 10px 2px black;
+}
+
+.card.non-deletable .throw {
+  display: none;
+}
+
+.card.marked > * {
+  opacity: 0.4;
+}
+
+.card.marked::before {
+  content: attr(id);
+  position: absolute;
+  place-self: center;
+  z-index: 2;
+  font-weight: 700;
+}
+
+#game {
+  position: relative;
+  gap: var(--standard-gap);
+  max-height: 90vh;
+}
+
+.configurables {
+  display: flex;
+  gap: var(--standard-gap);
+  position: sticky;
+  order: -1;
+  top: 96%;
+  justify-self: end;
+  right: 2rem;
+}
+
+#game.voting :where(.card .throw, #clock) {
+  display: none;
+}
+
+#game:not(.active) #clock {
+  display: none;
+}
+/* hide form with game start button */
+#game:is(.active, .voting) ~ form {
+  display: none;
+}
+
+#game.voting .card {
+  margin-inline: auto;
+  padding: 0;
+}
+
+#game.voting .card > :is(figcaption, .pick) {
+  padding: var(--standard-padding);
+}
+
+#game.voting .dump {
+  display: none;
+}
+
+#game:not(.voting).hidden-cards .card {
+  display: none;
+}
+
+#game:not(.active) .configurables,
+#game.hidden-cards .configurables,
+#card-creation:not(.active) {
+  display: none;
+}
+
+#clock,
+#question,
+#winner {
+  justify-self: center;
+}
+
+#question,
+#winner {
+  font-size: 2rem;
+}
+
+#clock {
+  --clock-width: min(60px, 4vw);
+  font-size: 1.2rem;
+  justify-self: center;
+  width: var(--clock-width);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--main-color);
+}
+
+#card-creation {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  z-index: 0;
+}
+
+#card-creation::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  scale: 100;
+  background: black;
+  opacity: 0.9;
+  z-index: -1;
+}
+
+#creation-save {
+  align-self: end;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    translate: -50%;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0;
+  }
+}
