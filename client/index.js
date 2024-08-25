@@ -1078,7 +1078,7 @@ const domElements = {
           iteration < usedCardsRefferences.length;
           iteration++
         ) {
-          card.callbacks.dumpCard(usedCardsRefferences[iteration].text);
+          card.callbacks.dumpCard(usedCardsRefferences[iteration]);
           usedCardsRefferences[iteration]?.remove();
         }
 
