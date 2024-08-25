@@ -164,6 +164,10 @@ const deck = {
       deck.cards.remove(key);
     });
   },
+
+  clearDeck() {
+    deck.cards.clear();
+  },
 };
 
 const playerScore = {
@@ -247,6 +251,10 @@ const game = {
 
   deleteCard(cardText) {
     deck.deleteCard(cardText);
+  },
+
+  clearDeck() {
+    deck.clearDeck();
   },
 
   setClockDomRefference(domElement) {

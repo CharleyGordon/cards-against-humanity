@@ -791,39 +791,45 @@ const server = {
 };
 
 // setting game object (and injecting dependencies)
-game.set({
-  players: players.pool.getObjectPool(),
-  settings: common.gameSettings.generics,
 
-  // allSetCallback: requestHandler.sendCardRequest,
-  allReadyCallback: (cardsArray = []) => {
-    switch (cardsArray.length) {
-      case 0: {
-        // in case of no cards, just rotate host and start new round
-        console.log("no cards were sent! Rotating hosts...");
-        requestHandler.rotateHost(2000);
-        break;
+function setGame() {
+  game.set({
+    players: players.pool.getObjectPool(),
+    settings: common.gameSettings.generics,
+
+    // allSetCallback: requestHandler.sendCardRequest,
+    allReadyCallback: (cardsArray = []) => {
+      switch (cardsArray.length) {
+        case 0: {
+          // in case of no cards, just rotate host and start new round
+          console.log("no cards were sent! Rotating hosts...");
+          requestHandler.rotateHost(2000);
+          break;
+        }
+        default: {
+          requestHandler.sendCards(cardsArray);
+          break;
+        }
       }
-      default: {
-        requestHandler.sendCards(cardsArray);
-        break;
-      }
-    }
-  },
-  roundWonCallback: (playerCard) => {
-    requestHandler.sendRoundWinner(playerCard);
-    // sets next player in line as host
-    requestHandler.rotateHost(2000);
-  },
-  gameWonCallback: (playerNick) => {
-    requestHandler.sendGameWinner(playerNick);
-    requestHandler.gameEnded = true;
-    host.setRootHost();
-    host.broadcastCurrentHost();
-  },
-  pointAddedCallback: (playerNick, score) => {
-    requestHandler.sendPointAdded(playerNick, score);
-  },
-});
+    },
+    roundWonCallback: (playerCard) => {
+      requestHandler.sendRoundWinner(playerCard);
+      // sets next player in line as host
+      requestHandler.rotateHost(2000);
+    },
+    gameWonCallback: (playerNick) => {
+      requestHandler.sendGameWinner(playerNick);
+      requestHandler.gameEnded = true;
+      setGame();
+      host.rotateHost();
+      // host.broadcastCurrentHost();
+    },
+    pointAddedCallback: (playerNick, score) => {
+      requestHandler.sendPointAdded(playerNick, score);
+    },
+  });
+}
+
+setGame();
 
 server.webSocket.on("connection", server.init);

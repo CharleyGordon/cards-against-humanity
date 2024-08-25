@@ -257,6 +257,8 @@ const roundWinnerHandler = {
 const gameWinnerHandler = {
   handle({ value }) {
     console.dir(value);
+    game.clearDeck();
+    game.instance = false;
     domElements.gameBox.callbacks.displayWinner(value);
     domElements.playerList.callbacks.clearScores();
     game.running = false;
@@ -463,16 +465,26 @@ const player = {
 const domElements = {
   playerList: {
     element: document.getElementById("players"),
+
+    idRefferences: {
+      element: "players",
+    },
+
     idLabels: {
       listNick: "list-nick",
     },
+
     classes: {
       host: "host",
       score: "score",
     },
+
     callbacks: {
       addPlayer(nickname) {
         const playerList = domElements.playerList;
+        const playerListElement = document.getElementById(
+          playerList.idRefferences.element
+        );
         const trElement = document.createElement("tr");
 
         const nicknameElement = document.createElement("td");
@@ -482,12 +494,15 @@ const domElements = {
         score.textContent = "0";
         trElement.append(nicknameElement, score);
         trElement.id = `${domElements.playerList.idLabels.listNick}-${nickname}`;
-        domElements.playerList.element.append(trElement);
+        playerListElement.append(trElement);
       },
 
       // appends every nickname (besides current player nickname) to list
       recreateList(playersArray) {
         const playerList = domElements.playerList;
+        const playerListElement = document.getElementById(
+          playerList.idRefferences.element
+        );
         const documentFragment = new DocumentFragment();
         let playerElement, nickElement, currentNick, currentScore;
         let scoreElement;
@@ -504,13 +519,17 @@ const domElements = {
           playerElement.append(nickElement, scoreElement);
           documentFragment.append(playerElement);
         }
-        playerList.element.append(documentFragment);
+        playerListElement.append(documentFragment);
       },
 
       // set scores for all players as 0
       clearScores() {
         const playerList = domElements.playerList;
-        const scores = playerList.element.querySelectorAll(
+        const playerListElement = document.getElementById(
+          playerList.idRefferences.element
+        );
+
+        const scores = playerListElement.querySelectorAll(
           `.${playerList.classes.score}`
         );
 
@@ -525,7 +544,13 @@ const domElements = {
         liElement?.remove();
       },
       setAsHost(nickName) {
-        if (domElements.playerList.element.children.length === 0) {
+        const playerList = domElements.playerList;
+
+        const playerListElement = document.getElementById(
+          playerList.idRefferences.element
+        );
+
+        if (playerListElement.children.length === 0) {
           return setTimeout(() => {
             domElements.playerList.callbacks.setAsHost(nickName);
           }, 0);
@@ -584,6 +609,7 @@ const domElements = {
 
     idRefferences: {
       gameSettingsLink: "game-settings-link",
+      element: "game-settings",
     },
 
     classes: {
@@ -593,31 +619,41 @@ const domElements = {
     callbacks: {
       show() {
         const gameSettings = domElements.gameSettings;
+        const gameSettingsElement = document.getElementById(
+          gameSettings.idRefferences.element
+        );
         const gameSettingsLink = document.getElementById(
           gameSettings.idRefferences.gameSettingsLink
         );
         gameSettingsLink.classList.add(gameSettings.classes.visible);
-        gameSettings.element.classList.add(gameSettings.classes.visible);
+        gameSettingsElement.classList.add(gameSettings.classes.visible);
       },
 
       hide() {
         const gameSettings = domElements.gameSettings;
+        const gameSettingsElement = document.getElementById(
+          gameSettings.idRefferences.element
+        );
         const gameSettingsLink = document.getElementById(
           gameSettings.idRefferences.gameSettingsLink
         );
         gameSettingsLink.classList.remove(gameSettings.classes.visible);
 
-        gameSettings.element.classList.remove(gameSettings.classes.visible);
+        gameSettingsElement.classList.remove(gameSettings.classes.visible);
       },
 
       gatherValues(event) {
         event.preventDefault();
         const gameSettings = domElements.gameSettings;
+        const gameSettingsElement = document.getElementById(
+          gameSettings.idRefferences.element
+        );
+
         let inputValue;
         let differenceObject;
         let currentInput;
         const parameters = {};
-        switch (gameSettings.element.checkValidity()) {
+        switch (gameSettingsElement.checkValidity()) {
           case false: {
             return false;
           }
@@ -714,44 +750,66 @@ const domElements = {
     idRefferences: {
       question: "question",
       winner: "winner",
+      element: "game",
     },
 
     callbacks: {
       // indicate that game is in voting state (after cards have been picked)
       setAsVoting() {
         const gameBox = domElements.gameBox;
-        gameBox.element.classList.add(gameBox.classes.voting);
+        const gameBoxElement = document.getElementById(
+          gameBox.idRefferences.element
+        );
+        gameBoxElement.classList.add(gameBox.classes.voting);
       },
 
       unsetAsVoting() {
         const gameBox = domElements.gameBox;
-        gameBox.element.classList.remove(gameBox.classes.voting);
+        const gameBoxElement = document.getElementById(
+          gameBox.idRefferences.element
+        );
+        gameBoxElement.classList.remove(gameBox.classes.voting);
       },
 
       setAsActive() {
         const gameBox = domElements.gameBox;
-        gameBox.element.classList.add(gameBox.classes.active);
+        const gameBoxElement = document.getElementById(
+          gameBox.idRefferences.element
+        );
+        gameBoxElement.classList.add(gameBox.classes.active);
       },
 
       hideCards() {
         // hides all cards (if player is host AND voteMode is disabled)
         const gameBox = domElements.gameBox;
-        gameBox.element.classList.add(gameBox.classes.hiddenCards);
+        const gameBoxElement = document.getElementById(
+          gameBox.idRefferences.element
+        );
+        gameBoxElement.classList.add(gameBox.classes.hiddenCards);
       },
 
       showCards() {
         const gameBox = domElements.gameBox;
-        gameBox.element.classList.remove(gameBox.classes.hiddenCards);
+        const gameBoxElement = document.getElementById(
+          gameBox.idRefferences.element
+        );
+        gameBoxElement.classList.remove(gameBox.classes.hiddenCards);
       },
 
       storeMarkup() {
         const gameBox = domElements.gameBox;
-        gameBox.markup = gameBox.element.outerHTML;
+        const gameBoxElement = document.getElementById(
+          gameBox.idRefferences.element
+        );
+        gameBox.markup = gameBoxElement.outerHTML;
       },
 
       restoreMarkup() {
         const gameBox = domElements.gameBox;
-        gameBox.element.outerHTML = gameBox.markup;
+        const gameBoxElement = document.getElementById(
+          gameBox.idRefferences.element
+        );
+        gameBoxElement.outerHTML = gameBox.markup;
       },
 
       displayWinner(winner) {
@@ -783,11 +841,18 @@ const domElements = {
 
   clock: {
     element: document.getElementById("clock"),
+    idRefferences: {
+      element: "clock",
+    },
   },
 
   cardsFigure: {
     element: document.getElementById("cards"),
     markup: "",
+
+    idRefferences: {
+      element: "cards",
+    },
 
     callbacks: {
       requestCards() {
@@ -919,7 +984,10 @@ const domElements = {
       setCard(element) {
         const card = domElements.card;
         const selectedClass = card.classes.selected;
-        const previousCard = domElements.cardsFigure.element.querySelector(
+        const cardsFigureElement = document.getElementById(
+          domElements.cardsFigure.idRefferences.element
+        );
+        const previousCard = cardsFigureElement.querySelector(
           `.${selectedClass}`
         );
 
@@ -956,10 +1024,13 @@ const domElements = {
         const cardTextSelector = card.selectors.text;
         const cardImageSelector = card.selectors.image;
         const selectedClass = card.classes.selected;
+        const cardsFigureElement = document.getElementById(
+          domElements.cardsFigure.idRefferences.element
+        );
 
         switch (selectedCard) {
           case false: {
-            selectedCard = domElements.cardsFigure.element.querySelector(
+            selectedCard = cardsFigureElement.querySelector(
               `.${selectedClass}`
             );
             break;
@@ -994,6 +1065,9 @@ const domElements = {
         const cardsFigure = domElements.cardsFigure;
         const dumpAllCard = document.getElementById(card.idRefferences.dumpAll);
         const isDumpAllCard = event.target === dumpAllCard;
+        const cardsFigureElement = document.getElementById(
+          cardsFigure.idRefferences.element
+        );
 
         switch (isDumpAllCard) {
           case false: {
@@ -1006,7 +1080,7 @@ const domElements = {
 
         if (!confirm("do you really want do dump all cards?")) return false;
 
-        const cards = cardsFigure.element.querySelectorAll(
+        const cards = cardsFigureElement.querySelectorAll(
           `.${card.classes.element}`
         );
 
@@ -1125,6 +1199,7 @@ const domElements = {
     },
 
     idRefferences: {
+      element: "card-creation",
       text: "creation-text",
       image: "creation-image",
       openButton: "create-card",
@@ -1201,6 +1276,9 @@ const domElements = {
         cardElement = cardElement.content.cloneNode(true);
         cardElementImage = cardElement.querySelector(card.selectors.image);
         cardElementText = cardElement.querySelector(card.selectors.text);
+        const cardsFigureElement = document.getElementById(
+          cardsFigure.idRefferences.element
+        );
 
         switch (image.value || false) {
           case false: {
@@ -1215,19 +1293,26 @@ const domElements = {
 
         cardElementImage.removeAttribute("id");
         cardElementText.removeAttribute("id");
-        cardsFigure.element.prepend(cardElement);
+        cardsFigureElement.prepend(cardElement);
 
         cardCreationForm.callbacks.close();
       },
 
       open() {
         const cardCreationForm = domElements.cardCreationForm;
-        cardCreationForm.element.classList.add(cardCreationForm.classes.active);
+        const cardCreationFormElement = document.getElementById(
+          cardCreationForm.idRefferences.element
+        );
+
+        cardCreationFormElement.classList.add(cardCreationForm.classes.active);
       },
 
       close() {
         const cardCreationForm = domElements.cardCreationForm;
-        cardCreationForm.element.classList.remove(
+        const cardCreationFormElement = document.getElementById(
+          cardCreationForm.idRefferences.element
+        );
+        cardCreationFormElement.classList.remove(
           cardCreationForm.classes.active
         );
       },
@@ -1268,6 +1353,10 @@ const domElements = {
   startButton: {
     element: document.getElementById("start-game"),
 
+    idRefferences: {
+      element: "start-game",
+    },
+
     classes: {
       visible: "visible",
     },
@@ -1275,20 +1364,34 @@ const domElements = {
     callbacks: {
       show() {
         const startButton = domElements.startButton;
-        startButton.element.classList.add(startButton.classes.visible);
+        const startButtonElement = document.getElementById(
+          startButton.idRefferences.element
+        );
+
+        startButtonElement.classList.add(startButton.classes.visible);
       },
 
       hide() {
         const startButton = domElements.startButton;
-        startButton.element.classList.remove(startButton.classes.visible);
+        const startButtonElement = document.getElementById(
+          startButton.idRefferences.element
+        );
+
+        startButtonElement.classList.remove(startButton.classes.visible);
       },
 
       prepareGameStart(event) {
         // additional click event check to decide if game should be started
         // this is done so when server sends message to all players about game start client wouldn't dispatch click event on startButton element (YUCK!)
         game.playing = false;
+
+        const startButton = domElements.startButton;
+        const startButtonElement = document.getElementById(
+          startButton.idRefferences.element
+        );
+
         switch (event.target) {
-          case domElements.startButton.element: {
+          case startButtonElement: {
             return domElements.startButton.callbacks.startGame();
           }
           default: {
@@ -1300,11 +1403,19 @@ const domElements = {
       startGame() {
         // set game box element to stock value
         domElements.gameBox.callbacks.unsetAsVoting();
+
+        const clockElement = document.getElementById(
+          domElements.clock.idRefferences.element
+        );
+        const cardsFigureElement = document.getElementById(
+          domElements.cardsFigure.idRefferences.element
+        );
+
         const gameInstance =
           game
             .set({
-              clockDomRefference: domElements.clock.element,
-              cardAppendDestination: domElements.cardsFigure.element,
+              clockDomRefference: clockElement,
+              cardAppendDestination: cardsFigureElement,
               cardVoteCallback: (card) => {
                 // send only player nickname
                 messenger.speak({

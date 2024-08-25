@@ -177,6 +177,7 @@ const game = {
     // allSetCallback,
     pointAddedCallback,
   }) {
+    game.players.clear();
     const gameInstance =
       game
         ?.setSettings(settings)

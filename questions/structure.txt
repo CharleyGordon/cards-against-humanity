@@ -1,0 +1,5 @@
+TABLE questions (
+  id INT PRIMARY KEY, 
+  lang VARCHAR(3) NOT NULL DEFAULT "EN",
+  text VARCHAR(1023) NOT NULL
+)

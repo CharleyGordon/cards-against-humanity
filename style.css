@@ -206,6 +206,7 @@ input:checked::after {
 
 header {
   font-size: 1.5rem;
+  justify-items: center;
 }
 
 header nav {
@@ -219,6 +220,18 @@ header nav ul {
 
 .players-table {
   width: fit-content;
+}
+
+.players-table th:nth-of-type(even) {
+  display: block;
+  position: relative;
+}
+
+.players-table th:nth-of-type(even)::before {
+  content: "|";
+  position: absolute;
+  left: 0;
+  translate: -20%;
 }
 
 .players-table,
@@ -380,11 +393,9 @@ img[src=""] {
 .configurables {
   display: flex;
   gap: var(--standard-gap);
-  position: sticky;
-  order: -1;
-  top: 96%;
-  justify-self: end;
-  right: 2rem;
+  order: 1;
+  width: fit-content;
+  justify-self: center;
 }
 
 #game.voting :where(.card .throw, #clock) {
@@ -395,8 +406,13 @@ img[src=""] {
   display: none;
 }
 /* hide form with game start button */
-#game:is(.active, .voting) ~ form {
+#game:is(.active, .voting) ~ .start-game {
   display: none;
+}
+
+.start-game {
+  width: fit-content;
+  margin-inline: auto;
 }
 
 #game.voting .card {
