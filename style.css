@@ -21,6 +21,12 @@
   --small-border-radius: calc(var(--standard-border-radius) / 4);
 }
 
+input,
+textarea {
+  background-color: var(--secondary-color);
+  color: var(--main-color);
+}
+
 #start-game {
   font-size: inherit;
   font-weight: inherit;
@@ -179,10 +185,14 @@ form label {
   gap: var(--small-gap);
 }
 
-form input {
+form :is(input, textarea) {
   appearance: none;
   width: 100%;
   display: block;
+}
+
+form textarea {
+  min-height: 10ch;
 }
 
 input[type="checkbox"],
@@ -279,7 +289,11 @@ header nav ul {
 }
 
 .card figcaption {
+  max-width: 25ch;
   padding-block-end: 2ch;
+  text-shadow: 1px 1px black -1px -1px black;
+  word-break: break-word;
+  overflow: auto;
 }
 
 .card :where(.pick, .reveal) {
