@@ -745,6 +745,7 @@ const domElements = {
       voting: "voting",
       active: "active",
       hiddenCards: "hidden-cards",
+      assemblyLayout: "assembly-layout",
     },
 
     idRefferences: {
@@ -836,6 +837,22 @@ const domElements = {
         );
         questionElement.textContent = question;
       },
+
+      setUsualLayout() {
+        const gameBox = domElements.gameBox;
+        const gameBoxElement = document.getElementById(
+          gameBox.idRefferences.element
+        );
+        gameBoxElement.classList.remove(gameBox.classes.assemblyLayout);
+      },
+
+      setCardAssembyLayout() {
+        const gameBox = domElements.gameBox;
+        const gameBoxElement = document.getElementById(
+          gameBox.idRefferences.element
+        );
+        gameBoxElement.classList.add(gameBox.classes.assemblyLayout);
+      },
     },
   },
 
@@ -899,6 +916,182 @@ const domElements = {
     },
   },
 
+  // figure for combining multiple cards by user
+  cardsAssemblyFigure: {
+    usedCards: [],
+    usedCardsRefferences: [],
+
+    idRefferences: {
+      element: "cards-assembly",
+      openButton: "assemble-cards",
+      escapeButton: "escape-assembly",
+      clearButton: "assembly-clear",
+      saveButton: "assembly-save",
+      closeButton: "assembly-close",
+    },
+
+    classes: {
+      card: "card",
+      cardOptionals: "optionals",
+      cardPickElement: "pick",
+    },
+
+    selectors: {
+      image: "img",
+      text: "figcaption",
+      cardPickElement: "a",
+    },
+
+    callbacks: {
+      toggleUi(event) {
+        const cardsAssemblyFigure = domElements.cardsAssemblyFigure;
+        const gameBox = domElements.gameBox;
+
+        const assembleButton = document.getElementById(
+          cardsAssemblyFigure.idRefferences.openButton
+        );
+
+        const escapeButton = document.getElementById(
+          cardsAssemblyFigure.idRefferences.escapeButton
+        );
+
+        const clearButton = document.getElementById(
+          cardsAssemblyFigure.idRefferences.clearButton
+        );
+
+        const saveButton = document.getElementById(
+          cardsAssemblyFigure.idRefferences.saveButton
+        );
+
+        const closeButton = document.getElementById(
+          cardsAssemblyFigure.idRefferences.closeButton
+        );
+
+        switch (event.target) {
+          case assembleButton: {
+            gameBox.callbacks.setCardAssembyLayout();
+            break;
+          }
+          case escapeButton: {
+            gameBox.callbacks.setUsualLayout();
+            break;
+          }
+          case clearButton: {
+            cardsAssemblyFigure.callbacks.clear();
+            break;
+          }
+          case saveButton: {
+            cardsAssemblyFigure.callbacks.saveCard();
+            break;
+          }
+          case closeButton: {
+            cardsAssemblyFigure.callbacks.close();
+            break;
+          }
+          default: {
+            return false;
+          }
+        }
+      },
+
+      // card joining won't copy images
+      join({ card, cardElement }) {
+        const cardsAssemblyFigure = domElements.cardsAssemblyFigure;
+        const cardsAssemblyFigureElement = document.getElementById(
+          domElements.cardsAssemblyFigure.idRefferences.element
+        );
+        const assemblyCardElement = cardsAssemblyFigureElement.querySelector(
+          `.${cardsAssemblyFigure.classes.card}`
+        );
+        const textElement = assemblyCardElement.querySelector(
+          cardsAssemblyFigure.selectors.text
+        );
+        switch (cardsAssemblyFigure.usedCards.includes(card)) {
+          case true: {
+            return false;
+          }
+          default: {
+            if (cardsAssemblyFigure.usedCards.length === 0)
+              textElement.textContent = "";
+            cardsAssemblyFigure.usedCards.push(card);
+            cardsAssemblyFigure.usedCardsRefferences.push(cardElement);
+            if (textElement.textContent) textElement.textContent += ";";
+            textElement.textContent += card.text;
+            break;
+          }
+        }
+      },
+
+      // clears card text
+      clear() {
+        if (!confirm("do you really want to clear this text?")) return false;
+        const cardsAssemblyFigure = domElements.cardsAssemblyFigure;
+        const cardsAssemblyFigureElement = document.getElementById(
+          domElements.cardsAssemblyFigure.idRefferences.element
+        );
+        const cardElement = cardsAssemblyFigureElement.querySelector(
+          `.${cardsAssemblyFigure.classes.card}`
+        );
+        const textElement = cardElement.querySelector(
+          cardsAssemblyFigure.selectors.text
+        );
+
+        textElement.textContent = "";
+      },
+
+      // saves card end deletes cards that were used
+      saveCard() {
+        const card = domElements.card;
+        const cardsFigure = domElements.cardsFigure;
+        const cardsFigureElement = document.getElementById(
+          cardsFigure.idRefferences.element
+        );
+        const cardsAssemblyFigure = domElements.cardsAssemblyFigure;
+        const cardsAssemblyFigureElement = document.getElementById(
+          cardsAssemblyFigure.idRefferences.element
+        );
+
+        const usedCardsRefferences = cardsAssemblyFigure.usedCardsRefferences;
+        let cardElement = cardsAssemblyFigureElement.querySelector(
+          `.${cardsAssemblyFigure.classes.card}`
+        );
+        cardElement = cardElement.cloneNode(true);
+
+        const optionalsElement = cardElement.querySelector(
+          `.${cardsAssemblyFigure.classes.cardOptionals}`
+        );
+
+        const cardPickElement = document.createElement(
+          cardsAssemblyFigure.selectors.cardPickElement
+        );
+        cardPickElement.classList.add(
+          cardsAssemblyFigure.classes.cardPickElement
+        );
+        cardPickElement.textContent = "pick this card";
+
+        optionalsElement.replaceWith(cardPickElement);
+
+        cardsFigureElement.append(cardElement);
+        // delete theese cards
+        for (
+          let iteration = 0;
+          iteration < usedCardsRefferences.length;
+          iteration++
+        ) {
+          card.callbacks.dumpCard(usedCardsRefferences[iteration].text);
+          usedCardsRefferences[iteration]?.remove();
+        }
+
+        cardsAssemblyFigure.callbacks.close();
+      },
+
+      close() {
+        const gameBox = domElements.gameBox;
+        gameBox.callbacks.setUsualLayout();
+      },
+    },
+  },
+
   card: {
     classes: {
       element: "card",
@@ -942,6 +1135,15 @@ const domElements = {
         let isPickElement;
         const elementClass = domElements.card.classes.element;
         const pickElement = domElements.card.classes.pick;
+
+        const gameBox = domElements.gameBox;
+        const gameBoxElement = document.getElementById(
+          gameBox.idRefferences.element
+        );
+        const assemblyLayoutClass = gameBox.classes.assemblyLayout;
+
+        const cardsAssemblyFigure = domElements.cardsAssemblyFigure;
+
         cardElement = event.target.closest(`.${elementClass}`) ?? false;
         isPickElement = event.target.matches(`.${pickElement}`);
         switch (isPickElement) {
@@ -968,6 +1170,15 @@ const domElements = {
               image: image.src ?? false,
               text: text.textContent ?? false,
             };
+          }
+        }
+
+        switch (gameBoxElement.matches(`.${assemblyLayoutClass}`)) {
+          case false: {
+            break;
+          }
+          default: {
+            return cardsAssemblyFigure.callbacks.join({ card, cardElement });
           }
         }
 
@@ -1486,6 +1697,7 @@ window.addEventListener("click", (event) => {
   domElements.card.callbacks.dumpCardOnEvent(event);
   domElements.card.callbacks.dumpAllCards(event);
   domElements.cardCreationForm.callbacks.toggleUi(event);
+  domElements.cardsAssemblyFigure.callbacks.toggleUi(event);
 });
 
 window.addEventListener("input", (event) => {

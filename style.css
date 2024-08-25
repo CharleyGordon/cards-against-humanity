@@ -114,7 +114,7 @@ body {
   grid-auto-flow: column;
   column-gap: calc(var(--row-gap) * 2);
   grid-auto-columns: 1fr;
-  align-items: baseline;
+  align-items: center;
 }
 
 #game-settings label {
@@ -165,6 +165,7 @@ form .description {
   display: block;
   width: fit-content;
   margin-inline: auto;
+  z-index: 1;
 }
 
 form :is(button, label) {
@@ -229,7 +230,11 @@ header nav ul {
 }
 
 .players-table {
+  --max-height: 15ch;
   width: fit-content;
+  max-height: var(--max-height);
+  overflow: auto;
+  z-index: -1;
 }
 
 .players-table th:nth-of-type(even) {
@@ -402,6 +407,29 @@ img[src=""] {
   position: relative;
   gap: var(--standard-gap);
   max-height: 90vh;
+}
+
+#game.assembly-layout {
+  grid-template-columns: 2fr 1fr;
+}
+#game:not(.assembly-layout) #cards-assembly {
+  display: none;
+}
+
+#game.assembly-layout > *:not(#cards, #cards-assemly) {
+  grid-column: 1 / -1;
+}
+
+#game.assembly-layout #cards-assembly {
+  grid-column: 2;
+  border-inline-start: 1px solid var(--main-color);
+}
+
+#game.assembly-layout .optionals {
+  align-self: end;
+  width: 100%;
+  display: flex;
+  gap: var(--standard-gap);
 }
 
 .configurables {
