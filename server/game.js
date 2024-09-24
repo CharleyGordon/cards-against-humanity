@@ -8,7 +8,8 @@ const game = {
 
   // votes for cards during player vote section (ONLY IF voteMode is enabled). Comes after everybody use a card or game times out
   // altered by voteForCard function
-  cardVotes: new Map(),
+  // {votingPlayer -> playerRecievingVoteFor}
+  cardVotes: {},
 
   // activates when everyone is ready / when time for card picking expires
   allReadyCallback: false,
@@ -63,7 +64,15 @@ const game = {
     return game.playerCards ?? false;
   },
 
-  voteForCard({ nickname, isHost }) {
+  voteForCard({ nickname, isHost, votingPlayer }) {
+    const voteScore = {};
+    // let voteScore = 0;
+    let player = {};
+    let playerScore = 0;
+    let playersVoted = 0;
+    let topScore = 0;
+    let winner = "";
+
     switch (game.settings.voteMode) {
       case false: {
         // get card author nickname
@@ -73,6 +82,43 @@ const game = {
         }
       }
       default: {
+        game.cardVotes[votingPlayer] = votingPlayer !== nickname ? nickname : false;
+
+        // check if every player voted
+
+        // sum votes in cardVotes map
+
+        if (!voteScore[nickname]) voteScore[nickname] = 0;
+
+        for (const key in game.cardVotes) {
+          if (!game.cardVotes[key]) return
+
+          playersVoted++;
+
+          player = game.cardVotes[key];
+
+          if (voteScore[player]) voteScore[player] = 0;
+
+          voteScore[player]++
+
+          playerScore = voteScore[player];
+
+          if (playerScore > topScore) {
+            topScore = playerScore;
+            winner = player;
+          }
+
+        }
+
+        console.log(`${playersVoted} of ${game.players.size} players voted`);
+
+        if (game.players.size === playersVoted) {
+          console.dir({ winner });
+          game.roundWonCallback(winner);
+          playersScore.addPoint(winner);
+          game.cardVotes = {};
+        }
+
         break;
       }
     }
@@ -80,7 +126,7 @@ const game = {
     return game;
   },
 
-  setPlayerVotes() {},
+  setPlayerVotes() { },
 
   // allReadyCallback will be activated by clock
   // activates when time is out

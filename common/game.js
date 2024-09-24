@@ -5,6 +5,7 @@ const gameSettings = {
     roundDuration: 90, // number -> time in seconds before choosen cards will be taken (if somebody didn't submit card)
     cardsInHand: 10,
     maxPlayers: 20,
+    voteMode: 1,
   },
 
   functions: {
@@ -32,10 +33,12 @@ const gameSettings = {
       let differenceValue;
       for (const key in differenceObject) {
         differenceValue = Number.parseInt(differenceObject[key], 10);
-        // exit if / when passed value is not a number
+        // exit if / when passed value is not a number or not boolean
         if (isNaN(differenceValue)) return false;
         gameSettings.generics[key] = differenceValue;
       }
+
+      if (!differenceObject.voteMode) gameSettings.voteMode = 0;
     },
   },
 };
@@ -163,7 +166,7 @@ const game = {
       .setTime(gameSettings.generics.roundDuration);
   },
 
-  getCard() {},
+  getCard() { },
 };
 
 const clock = {

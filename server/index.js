@@ -398,6 +398,7 @@ const cardVoteHandler = {
     game.voteForCard({
       isHost,
       nickname: value,
+      votingPlayer: players.getPlayerById(clientId),
     });
   },
 };
@@ -766,6 +767,7 @@ const server = {
     // free nickname from nicknames pool
     requestHandler.clients.pool.delete(id);
     playerNick = players.delete(connectionInstance);
+    game.players.delete(playerNick);
     requestHandler.sendPlayerLeftMessage(playerNick);
 
     console.dir(`client with nickname of ${playerNick} was removed`);

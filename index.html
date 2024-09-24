@@ -1,168 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cards against humanity</title>
-    <script src="client/index.js" type="module"></script>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="content">
-      <form id="game-settings">
-        <a href="#!" class="close">X</a>
-        <label for="round-duration">
-          <span class="description">Round duration</span>
-          <input
-            type="number"
-            id="round-duration"
-            min="10"
-            max="999"
-            value="90"
-          />
-        </label>
-        <label for="max-blank-cards">
-          <span class="description">Max blank cards</span>
-          <input
-            id="max-blank-cards"
-            required=""
-            type="number"
-            step="1"
-            min="0"
-            max="999"
-            value="100"
-          />
-        </label>
-        <label for="points-to-win">
-          <span class="description">Points to win</span>
-          <input
-            type="number"
-            id="points-to-win"
-            required=""
-            step="1"
-            min="1"
-            max="50"
-            value="5"
-          />
-        </label>
-        <label for="max-players">
-          <span class="description">Max players</span>
-          <input
-            type="number"
-            id="max-players"
-            required
-            min="1"
-            max="999"
-            step="1"
-            value="20"
-          />
-        </label>
-        <label for="cards-in-hand">
-          <span class="description">Cards in hand</span>
-          <input
-            type="number"
-            id="cards-in-hand"
-            required=""
-            min="1"
-            max="999"
-            step="1"
-            value="10"
-          />
-        </label>
-        <div class="optionals">
-          <span class="description">Optionals</span>
-          <label for="vote-mode">
-            <span class="description">vote mode</span>
-            <input type="checkbox" id="vote-mode" />
-          </label>
-          <label for="host-rotation">
-            <span class="description">Host rotation</span>
-            <input type="checkbox" id="host-rotation" checked="" />
-          </label>
-          <label for="reveal-one-by-one">
-            <span class="description">Reveal one by one</span>
-            <input type="checkbox" id="reveal-one-by-one" />
-          </label>
-        </div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cards against humanity</title>
+        <script src="client/index.js" type="module"></script>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="content">
+            <form id="game-settings">
+                <a href="#!" class="close">X</a>
+                <label for="round-duration">
+                    <span class="description">Round duration</span>
+                    <input
+                        type="number"
+                        id="round-duration"
+                        min="10"
+                        max="999"
+                        value="90"
+                    />
+                </label>
+                <label for="max-blank-cards">
+                    <span class="description">Max blank cards</span>
+                    <input
+                        id="max-blank-cards"
+                        required=""
+                        type="number"
+                        step="1"
+                        min="0"
+                        max="999"
+                        value="100"
+                    />
+                </label>
+                <label for="points-to-win">
+                    <span class="description">Points to win</span>
+                    <input
+                        type="number"
+                        id="points-to-win"
+                        required=""
+                        step="1"
+                        min="1"
+                        max="50"
+                        value="5"
+                    />
+                </label>
+                <label for="max-players">
+                    <span class="description">Max players</span>
+                    <input
+                        type="number"
+                        id="max-players"
+                        required
+                        min="1"
+                        max="999"
+                        step="1"
+                        value="20"
+                    />
+                </label>
+                <label for="cards-in-hand">
+                    <span class="description">Cards in hand</span>
+                    <input
+                        type="number"
+                        id="cards-in-hand"
+                        required=""
+                        min="1"
+                        max="999"
+                        step="1"
+                        value="10"
+                    />
+                </label>
+                <div class="optionals">
+                    <span class="description">Optionals</span>
+                    <label for="vote-mode">
+                        <span class="description">vote mode</span>
+                        <input
+                            type="checkbox"
+                            id="vote-mode"
+                            value="1"
+                            checked=""
+                        />
+                    </label>
+                    <label for="host-rotation">
+                        <span class="description">Host rotation</span>
+                        <input type="checkbox" id="host-rotation" checked="" />
+                    </label>
+                    <label for="reveal-one-by-one">
+                        <span class="description">Reveal one by one</span>
+                        <input type="checkbox" id="reveal-one-by-one" />
+                    </label>
+                </div>
 
-        <button type="submit">save settings</button>
-      </form>
-      <header>
-        <!-- <figure class="players-figure">
+                <button type="submit">save settings</button>
+            </form>
+            <header>
+                <!-- <figure class="players-figure">
           <figcaption>players:</figcaption>
           <ul id="players"></ul>
         </figure> -->
-        <table class="players-table">
-          <thead>
-            <th>Player</th>
-            <th>Score</th>
-          </thead>
-          <tbody id="players"></tbody>
-        </table>
-        <nav>
-          <ul>
-            <li>
-              <a href="#game-settings" id="game-settings-link">Game settings</a>
-            </li>
-          </ul>
-        </nav>
-      </header>
+                <table class="players-table">
+                    <thead>
+                        <th class="player-label">Player</th>
+                        <th>Score</th>
+                    </thead>
+                    <tbody id="players"></tbody>
+                </table>
+                <nav>
+                    <ul>
+                        <li>
+                            <a href="#game-settings" id="game-settings-link"
+                                >Game settings</a
+                            >
+                        </li>
+                    </ul>
+                </nav>
+            </header>
 
-      <!-- card template -->
-      <template id="card">
-        <figure class="card">
-          <!-- card image -->
-          <img id="card-image" alt="" />
-          <!-- card text -->
-          <figcaption id="card-text">card text</figcaption>
-          <a class="dump">X</a>
-          <a class="reveal">reveal</a>
-          <a class="pick">pick this card</a>
-        </figure>
-      </template>
-      <div id="game">
-        <span id="question"></span>
-        <span id="winner"></span>
-        <span id="clock"></span>
-        <figure id="cards"></figure>
-        <div class="configurables">
-          <a name="create-card" id="create-card">Create card</a>
-          <a id="dump-all" name="dump-all">Dump all cards</a>
-          <a name="join-cards" id="assemble-cards">Join cards</a>
-        </div>
-        <figure id="cards-assembly">
-          <div class="card">
-            <img alt="" />
-            <figcaption>Joined card text will appear here</figcaption>
-            <div class="optionals">
-              <a id="assembly-save">Save card</a>
-              <a id="assembly-clear">Clear</a>
+            <!-- card template -->
+            <template id="card">
+                <figure class="card">
+                    <!-- card image -->
+                    <img id="card-image" alt="" />
+                    <!-- card text -->
+                    <figcaption id="card-text">card text</figcaption>
+                    <a class="dump">X</a>
+                    <a class="reveal">reveal</a>
+                    <a class="pick">pick this card</a>
+                </figure>
+            </template>
+            <div id="game">
+                <span id="winner"></span>
+                <div class="interface">
+                    <span id="question"></span>
+                    <span id="clock"></span>
+                    <div class="configurables">
+                        <a name="create-card" id="create-card">Create card</a>
+                        <a id="dump-all" name="dump-all">Dump all cards</a>
+                        <a name="join-cards" id="assemble-cards">Join cards</a>
+                    </div>
+                </div>
+                <figure id="cards"></figure>
+
+                <figure id="cards-assembly">
+                    <div id="assembly-card" class="card">
+                        <img alt="" />
+                        <figcaption>
+                            Joined card text will appear here
+                        </figcaption>
+                        <div class="optionals">
+                            <a id="assembly-save">Save card</a>
+                            <a id="assembly-clear">Clear</a>
+                        </div>
+                    </div>
+                    <a id="assembly-close">Close</a>
+                </figure>
+                <form id="card-creation">
+                    <figure class="config">
+                        <label for="creation-text">
+                            <span class="description">card text</span>
+                            <textarea id="creation-text"></textarea>
+                        </label>
+                        <label for="creation-image">
+                            <span class="description">card image</span>
+                            <input type="text" id="creation-image" />
+                        </label>
+                    </figure>
+                    <figure class="card" id="creation-lookup">
+                        <img alt="" />
+                        <figcaption></figcaption>
+                        <a id="creation-save">save card</a>
+                    </figure>
+                    <a id="creation-exit">Exit card creation</a>
+                </form>
             </div>
-          </div>
-          <a id="assembly-close">Close</a>
-        </figure>
-        <form id="card-creation">
-          <figure class="config">
-            <label for="creation-text">
-              <span class="description">card text</span>
-              <textarea id="creation-text"></textarea>
-            </label>
-            <label for="creation-image">
-              <span class="description">card image</span>
-              <input type="text" id="creation-image" />
-            </label>
-          </figure>
-          <figure class="card" id="creation-lookup">
-            <img alt="" />
-            <figcaption></figcaption>
-            <a id="creation-save">save card</a>
-          </figure>
-          <a id="creation-exit">Exit card creation</a>
-        </form>
-      </div>
-      <form class="start-game">
-        <button id="start-game">start game</button>
-      </form>
-    </div>
-  </body>
+            <form class="start-game">
+                <button id="start-game">start game</button>
+            </form>
+        </div>
+    </body>
 </html>

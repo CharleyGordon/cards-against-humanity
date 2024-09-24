@@ -62,7 +62,7 @@ const gameSettings = {
     cardsInHand: 10,
     maxPlayers: 20,
     // in vote mode, every player can vote for the best card
-    voteMode: false,
+    voteMode: true,
     hostRotation: true,
     // cards are shown one by one on host's demand
     revealOneByOne: false,

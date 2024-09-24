@@ -1,6 +1,9 @@
 import game from "./game.js";
 import common from "../common/index.js";
 
+// server that hosts game (ergo server containing /server part of this project)
+// to make dedicated server work, set destination to it's public IP
+// for full "It works on my machine" feeling, leave as localhost
 const destination = "localhost";
 const port = "8080";
 
@@ -193,7 +196,8 @@ const hostHandler = {
         player.isHost = true;
         domElements.gameSettings.callbacks.show();
         domElements.startButton.callbacks.show();
-        domElements.gameBox.callbacks.hideCards();
+
+
         break;
       }
     }
@@ -218,14 +222,18 @@ const gameStartHandler = {
       }
       default: {
         // start game (locally)
+
+        // catching off bug where after game was restarted host couldn't get cards displayed (first round only)
+        domElements.gameBox.callbacks.showCards();
+
         domElements.startButton.callbacks.startGame();
         domElements.gameBox.callbacks.setAsActive();
         domElements.gameBox.callbacks.clearWinner();
         domElements.gameBox.callbacks.displayQuestion(value);
         domElements.cardsFigure.callbacks.requestCards();
 
-        // setTimeout(() => {
-        // }, 0);
+        if (!common.gameSettings.generics.voteMode) domElements.gameBox.callbacks.hideCards();
+
         break;
       }
     }
@@ -377,7 +385,7 @@ const generateCardsTalker = {
       }
     }
 
-    switch (!common.gameSettings.voteMode && player.isHost) {
+    switch (!common.gameSettings.generics.voteMode && player.isHost) {
       case true: {
         return false;
       }
@@ -752,6 +760,7 @@ const domElements = {
       question: "question",
       winner: "winner",
       element: "game",
+      assembyCard: "assembly-card"
     },
 
     callbacks: {
@@ -846,12 +855,14 @@ const domElements = {
         gameBoxElement.classList.remove(gameBox.classes.assemblyLayout);
       },
 
-      setCardAssembyLayout() {
+      setCardAssemblyLayout() {
         const gameBox = domElements.gameBox;
+        const assemblyCard = document.getElementById(gameBox.idRefferences.assembyCard);
         const gameBoxElement = document.getElementById(
           gameBox.idRefferences.element
         );
         gameBoxElement.classList.add(gameBox.classes.assemblyLayout);
+        assemblyCard.scrollIntoView();
       },
     },
   },
@@ -895,7 +906,7 @@ const domElements = {
 
         // catching bug from somewhere else (somehow card generation request is send twice)
         switch (
-          game.getCards().size < common.gameSettings.generics.cardsInHand
+        game.getCards().size < common.gameSettings.generics.cardsInHand
         ) {
           case false: {
             break;
@@ -969,7 +980,7 @@ const domElements = {
 
         switch (event.target) {
           case assembleButton: {
-            gameBox.callbacks.setCardAssembyLayout();
+            gameBox.callbacks.setCardAssemblyLayout();
             break;
           }
           case escapeButton: {
