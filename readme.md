@@ -13,7 +13,7 @@
 
   ```git clone git@github.com:CharleyGordon/cards-against-humanity.git```
 
-  Or download and extract .zip file.
+  Or download and extract .zip file
 
   Change path to repo
 
