@@ -27,20 +27,26 @@
   ```npm i ws```
 
 ## Execution
-  Check file client/index.js and change line 7 value to your server's public address.
+  Check file client/index.js and change line 7 value to your server's public address
+
   ```const destination = "<server-ip>";```
   If you run locally, leave address as localhost
+
   ```const destination = "localhost";```
 
   Change path to repo
+
   ```cd <path-to-repo>```
 
   Run server (e.g. IIS, Apache for non-local use, live-server extension or live-server npm package for local use)
   Example showing live-server npm command
+
   ```live-server --port=5050```
 
   Change path to server
+
   ```cd server```
 
   Run node
+
   ```node index.js```
