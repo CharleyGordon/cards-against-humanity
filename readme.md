@@ -36,7 +36,7 @@
 
   ```const destination = "<server-ip>";```
 
-  If you run locally, leave address as localhost
+  If you're running locally, leave address as localhost
 
   ```const destination = "localhost";```
 
