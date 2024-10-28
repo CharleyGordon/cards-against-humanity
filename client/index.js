@@ -24,6 +24,10 @@ const messenger = {
         handler = successHandler;
         break;
       }
+      case common.messageStructure.errorHeader: {
+        handler = errorHandler;
+        break;
+      }
       case common.messageStructure.id: {
         handler = identifierHandler;
         break;
@@ -145,6 +149,19 @@ const successHandler = {
     }
   },
 };
+
+const errorHandler = {
+  handle({ subject, value }) {
+    console.dir(`passed subject: ${subject}`);
+
+    switch (subject) {
+      case common.subjects.setNickName: {
+        console.log("reopening nickname prompt");
+        return player.setNickName(false, value)
+      }
+    }
+  }
+}
 
 const newPlayerHandler = {
   handle({ value }) {
@@ -437,9 +454,13 @@ const player = {
   isHost: false,
   // setNickName fires right after connecting to webSocket
 
-  setNickName(nickName = false) {
-    while (!nickName) {
-      nickName = prompt("please enter nickname").trim();
+  setNickName(nickName = false, errorMessage = "") {
+    if (!nickName) {
+      if (errorMessage) {
+        nickName = prompt(errorMessage)
+      } else {
+        nickName = prompt("please enter nickname").trim();
+      }
     }
     // send clients id via message
     const message = JSON.stringify({

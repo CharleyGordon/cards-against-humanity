@@ -302,10 +302,12 @@ const nickNameHandler = {
           break;
         }
       }
+
+      return
     }
     return requestHandler.sendError({
       subject: common.subjects.setNickName,
-      errorString: "value already exists!",
+      errorString: `nickname ${value} already exists! Please enter new one`,
       client,
     });
   },
